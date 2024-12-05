@@ -7,6 +7,7 @@ This repo provides a zig implementation for [sse4-strstr](https://github.com/Woj
 ```zig
 const std = @import("std");
 const strstr_anysize = @import("path/to/neon-strstr.zig").strstr_anysize;
+
 pub fn main() void {
     const str = "12345678901234567"; // if str.len < 16 then it will fall back to std.mem.indexOfAny(u8, str, needle)
     const needle = "09123";
