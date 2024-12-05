@@ -1,5 +1,5 @@
 const std = @import("std");
-const strstr_anysize = @import("./main.zig").strstr_anysize;
+const strstr_anysize = @import("./neon-strstr.zig").strstr_anysize;
 
 pub fn main() void {
     const str = "12345678901234567"; // if str.len < 16 then it will fall back to std.mem.indexOfAny(u8, str, needle)
