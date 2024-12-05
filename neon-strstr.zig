@@ -24,7 +24,16 @@ pub inline fn vget_low_u8(vec: uint8x16) uint8x8 {
 }
 
 pub inline fn vld1q_u8(mem: []const u8) uint8x16 {
-    return mem[0..16].*;
+    if (mem.len < 16) {
+        var buffer: [16]u8 = .{0} ** 16; // Initialize a 16-byte buffer filled with zeros.
+
+        const len = @min(mem.len, 16);
+        @memcpy(buffer[0..len], mem[0..len]);
+
+        return buffer[0..16].*;
+    } else {
+        return mem[0..16].*;
+    }
 }
 
 pub inline fn vceqq_u8(a: uint8x16, b: uint8x16) uint8x16 {
@@ -45,7 +54,7 @@ pub inline fn vbsl_u8(mask: uint8x8, a: uint8x8, b: uint8x8) uint8x8 {
 // Copyright (c) 2008-2016, Wojciech Muła
 // Licensed under the BSD-2-Clause license.
 // See https://github.com/WojciechMula/sse4-strstr?tab=BSD-2-Clause-1-ov-file#readme for details.
-pub fn neon_strstr_anysize(str: []const u8, needle: []const u8) ?usize {
+pub fn strstr_anysize(str: []const u8, needle: []const u8) ?usize {
     const str_len = str.len;
     const needle_len = needle.len;
 
@@ -66,8 +75,8 @@ pub fn neon_strstr_anysize(str: []const u8, needle: []const u8) ?usize {
     var i: usize = 0;
     while (i < str_len) : (i += 16) {
         const block_first: uint8x16 = vld1q_u8(str[i..]);
-        const block_last: uint8x16 = if (i + needle_len > str_len) @splat(0) else vld1q_u8(str[i + needle_len - 1 ..]);
-
+        const block_last: uint8x16 = if (i + needle_len - 1 > str_len) @splat(0) else vld1q_u8(str[i + needle_len - 1 ..]);
+        
         const eq_first = vceqq_u8(first, block_first);
         const eq_last = vceqq_u8(last, block_last);
         const pred_16 = eq_first & eq_last;
