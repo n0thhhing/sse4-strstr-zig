@@ -23,6 +23,7 @@ pub inline fn vget_low_u8(vec: uint8x16) uint8x8 {
     );
 }
 
+// TODO: Find a better way to do this
 pub inline fn vld1q_u8(mem: []const u8) uint8x16 {
     if (mem.len < 16) {
         var buffer: [16]u8 = .{0} ** 16;
