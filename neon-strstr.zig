@@ -25,7 +25,7 @@ pub inline fn vget_low_u8(vec: uint8x16) uint8x8 {
 
 pub inline fn vld1q_u8(mem: []const u8) uint8x16 {
     if (mem.len < 16) {
-        var buffer: [16]u8 = .{0} ** 16; // Initialize a 16-byte buffer filled with zeros.
+        var buffer: [16]u8 = .{0} ** 16;
 
         const len = @min(mem.len, 16);
         @memcpy(buffer[0..len], mem[0..len]);
